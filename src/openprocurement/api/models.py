@@ -1065,6 +1065,7 @@ class Tender(SchematicsDocument, Model):
             'edit_complete': whitelist(),
             'edit_unsuccessful': whitelist(),
             'edit_cancelled': whitelist(),
+            'edit_active.qualification.decrypt': whitelist('status'),
             'view': view_role,
             'listing': listing_role,
             'auction_view': auction_view_role,
@@ -1084,6 +1085,7 @@ class Tender(SchematicsDocument, Model):
             'Administrator': Administrator_role,
             'default': schematics_default_role,
             'contracting': whitelist('doc_id', 'owner'),
+            'active.qualification.decrypt': view_role,
         }
 
     def __local_roles__(self):
@@ -1131,7 +1133,7 @@ class Tender(SchematicsDocument, Model):
     revisions = ListType(ModelType(Revision), default=list())
     auctionPeriod = ModelType(TenderAuctionPeriod, default={})
     minimalStep = ModelType(Value, required=True)
-    status = StringType(choices=['draft', 'active.enquiries', 'active.tendering', 'active.auction', 'active.qualification', 'active.awarded', 'complete', 'cancelled', 'unsuccessful'], default='active.enquiries')
+    status = StringType(choices=['draft', 'active.enquiries', 'active.tendering', 'active.auction', 'active.qualification', 'active.awarded', 'complete', 'cancelled', 'unsuccessful', 'active.qualification.decrypt'], default='active.enquiries')
     questions = ListType(ModelType(Question), default=list())
     complaints = ListType(ComplaintModelType(Complaint), default=list())
     auctionUrl = URLType()
@@ -1237,7 +1239,7 @@ class Tender(SchematicsDocument, Model):
             last_award_status = self.awards[-1].status if self.awards else ''
             if standStillEnds and last_award_status == 'unsuccessful':
                 checks.append(max(standStillEnds))
-        elif self.lots and self.status in ['active.qualification', 'active.awarded'] and not any([
+        elif self.lots and self.status in ['active.qualification.decrypt', 'active.awarded'] and not any([
                 i.status in self.block_complaint_status and i.relatedLot is None
                 for i in self.complaints
             ]):

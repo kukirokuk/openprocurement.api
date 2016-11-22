@@ -1168,6 +1168,53 @@ class TenderResourceTest(BaseWebTest):
 
 class TenderProcessTest(BaseTenderWebTest):
     setUp = BaseWebTest.setUp
+    def test_decrypt_status(self):
+ 
+        self.app.authorization = ('Basic', ('broker', ''))
+        data = test_tender_data.copy()
+        # empty tenders listing
+        response = self.app.get('/tenders')
+        self.assertEqual(response.json['data'], [])
+        # create tender
+        response = self.app.post_json('/tenders',
+                                      {"data": data})
+        tender_id = self.tender_id = response.json['data']['id']
+        owner_token = response.json['access']['token']
+
+
+
+        # self.set_status('active.qualification.decrypt')
+        response = self.app.get('/tenders/{}'.format(tender_id))
+        print "!!!!!!!", response.json["data"]['items'][0]["classification"]["id"]
+
+        response = self.app.patch_json('/tenders/{}?acc_token={}'.format(tender_id, owner_token), {'data': {'items': [{"classification": {
+            "scheme": "CPV",
+            "id": "55523100-3",
+            "description": "Послуги з харчування у школах"
+        }}]}})
+        self.assertEqual(response.status, "200 OK")
+
+
+
+
+        # switch to active.tendering
+        response = self.set_status('active.tendering', {"auctionPeriod": {"startDate": (get_now() + timedelta(days=10)).isoformat()}})
+        self.assertIn("auctionPeriod", response.json['data'])
+        # create bid
+        self.app.authorization = ('Basic', ('broker', ''))
+        response = self.app.post_json('/tenders/{}/bids'.format(tender_id),
+                                      {'data': {'tenderers': [test_organization], "value": {"amount": 500}}})
+        self.set_status('active.qualification.decrypt')
+        # switch to active.qualification
+        # self.set_status('active.auction', {'status': 'active.tendering'})
+        self.app.authorization = ('Basic', ('broker', ''))
+        response = self.app.patch_json('/tenders/{}?acc_token={}'.format(tender_id, owner_token), {"data": {"status":'active.qualification' }})
+
+        # tender_data = self.db.get(tender['id'])
+        # tender_data['status'] = 'active.qualification'
+        # self.db.save(tender_data)
+
+        print response
 
     def test_invalid_tender_conditions(self):
         self.app.authorization = ('Basic', ('broker', ''))

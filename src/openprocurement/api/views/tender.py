@@ -538,6 +538,10 @@ class TenderResource(APIResource):
             apply_patch(self.request, save=False, src=self.request.validated['tender_src'])
             check_status(self.request)
             save_tender(self.request)
+        if self.request.authenticated_role != 'decryptor' and tender.status in ['active.qualification.decrypt']:
+            self.request.errors.add('body', 'data', 'Can\'t update tender in current ({}) status'.format(tender.status))
+            self.request.errors.status = 403
+            return
         else:
             apply_patch(self.request, src=self.request.validated['tender_src'])
         self.LOGGER.info('Updated tender {}'.format(tender.id),

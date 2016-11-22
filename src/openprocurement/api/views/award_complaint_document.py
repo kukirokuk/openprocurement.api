@@ -41,7 +41,7 @@ class TenderAwardComplaintDocumentResource(APIResource):
     def collection_post(self):
         """Tender Award Complaint Document Upload
         """
-        if self.request.validated['tender_status'] not in ['active.qualification', 'active.awarded']:
+        if self.request.validated['tender_status'] not in ['active.qualification.decrypt', 'active.awarded']:
             self.request.errors.add('body', 'data', 'Can\'t add document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return
@@ -85,7 +85,7 @@ class TenderAwardComplaintDocumentResource(APIResource):
             self.request.errors.add('url', 'role', 'Can update document only author')
             self.request.errors.status = 403
             return
-        if self.request.validated['tender_status'] not in ['active.qualification', 'active.awarded']:
+        if self.request.validated['tender_status'] not in ['active.qualification.decrypt', 'active.awarded']:
             self.request.errors.add('body', 'data', 'Can\'t update document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return
@@ -112,7 +112,7 @@ class TenderAwardComplaintDocumentResource(APIResource):
             self.request.errors.add('url', 'role', 'Can update document only author')
             self.request.errors.status = 403
             return
-        if self.request.validated['tender_status'] not in ['active.qualification', 'active.awarded']:
+        if self.request.validated['tender_status'] not in ['active.qualification.decrypt', 'active.awarded']:
             self.request.errors.add('body', 'data', 'Can\'t update document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return

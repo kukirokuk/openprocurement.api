@@ -524,7 +524,7 @@ def add_next_award(request):
                 statuses.add('unsuccessful')
         if statuses.difference(set(['unsuccessful', 'active'])):
             tender.awardPeriod.endDate = None
-            tender.status = 'active.qualification'
+            tender.status = 'active.qualification.decrypt'
         else:
             tender.awardPeriod.endDate = now
             tender.status = 'active.awarded'
@@ -548,7 +548,7 @@ def add_next_award(request):
                 request.response.headers['Location'] = request.route_url('Tender Awards', tender_id=tender.id, award_id=award['id'])
         if tender.awards[-1].status == 'pending':
             tender.awardPeriod.endDate = None
-            tender.status = 'active.qualification'
+            tender.status = 'active.qualification.decrypt'
         else:
             tender.awardPeriod.endDate = now
             tender.status = 'active.awarded'

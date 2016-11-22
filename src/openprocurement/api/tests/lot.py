@@ -390,7 +390,7 @@ class TenderLotResourceTest(BaseTenderWebTest):
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(set(response.json['data']), set([u'id', u'date', u'title', u'description', u'minimalStep', u'value', u'status']))
 
-        self.set_status('active.qualification')
+        self.set_status('active.qualification.decrypt')
 
         response = self.app.get('/tenders/{}/lots/{}'.format(self.tender_id, lot['id']))
         self.assertEqual(response.status, '200 OK')
@@ -426,7 +426,7 @@ class TenderLotResourceTest(BaseTenderWebTest):
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(set(response.json['data'][0]), set([u'id',  u'date', u'title', u'description', u'minimalStep', u'value', u'status']))
 
-        self.set_status('active.qualification')
+        self.set_status('active.qualification.decrypt')
 
         response = self.app.get('/tenders/{}/lots'.format(self.tender_id))
         self.assertEqual(response.status, '200 OK')
@@ -1231,7 +1231,7 @@ class TenderLotProcessTest(BaseTenderWebTest):
         response = self.set_status('active.auction', {'status': 'active.tendering'})
         self.app.authorization = ('Basic', ('chronograph', ''))
         response = self.app.patch_json('/tenders/{}'.format(tender_id), {"data": {"id": tender_id}})
-        self.assertEqual(response.json['data']['status'], 'active.qualification')
+        self.assertEqual(response.json['data']['status'], 'active.qualification.decrypt')
         # for second lot
         lot_id = lots[1]
         # get awards

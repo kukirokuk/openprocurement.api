@@ -29,7 +29,7 @@ class TenderSwitchQualificationResourceTest(BaseTenderWebTest):
         response = self.app.patch_json('/tenders/{}'.format(self.tender_id), {'data': {'id': self.tender_id}})
         self.assertEqual(response.status, '200 OK')
         self.assertEqual(response.content_type, 'application/json')
-        self.assertEqual(response.json['data']["status"], "active.qualification")
+        self.assertEqual(response.json['data']["status"], "active.qualification.decrypt")
         self.assertEqual(len(response.json['data']["awards"]), 1)
 
 
@@ -286,7 +286,7 @@ class TenderLotComplaintSwitchResourceTest(TenderComplaintSwitchResourceTest):
 
 
 class TenderAwardComplaintSwitchResourceTest(BaseTenderWebTest):
-    initial_status = 'active.qualification'
+    initial_status = 'active.qualification.decrypt'
     initial_bids = test_bids
 
     def setUp(self):

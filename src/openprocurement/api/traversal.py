@@ -29,6 +29,7 @@ class Root(object):
         (Allow, 'g:chronograph', 'edit_tender'),
         (Allow, 'g:Administrator', 'edit_tender'),
         (Allow, 'g:Administrator', 'edit_bid'),
+        (Allow, 'g:decryptor', 'edit_tender'),
         (Allow, 'g:admins', ALL_PERMISSIONS),
     ]
 

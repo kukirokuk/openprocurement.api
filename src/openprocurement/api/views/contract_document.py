@@ -25,7 +25,7 @@ from openprocurement.api.validation import (
 class TenderAwardContractDocumentResource(APIResource):
 
     def validate_contract_document(self, operation):
-        if self.request.validated['tender_status'] not in ['active.qualification', 'active.awarded']:
+        if self.request.validated['tender_status'] not in ['active.qualification.decrypt', 'active.awarded']:
             self.request.errors.add('body', 'data', 'Can\'t {} document in current ({}) tender status'.format(operation, self.request.validated['tender_status']))
             self.request.errors.status = 403
             return

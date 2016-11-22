@@ -40,7 +40,7 @@ class TenderDocumentResource(APIResource):
     def collection_post(self):
         """Tender Document Upload"""
         if self.request.authenticated_role != 'auction' and self.request.validated['tender_status'] != 'active.enquiries' or \
-           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification']:
+           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification.decrypt']:
             self.request.errors.add('body', 'data', 'Can\'t add document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return
@@ -72,7 +72,7 @@ class TenderDocumentResource(APIResource):
     def put(self):
         """Tender Document Update"""
         if self.request.authenticated_role != 'auction' and self.request.validated['tender_status'] != 'active.enquiries' or \
-           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification']:
+           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification.decrypt']:
             self.request.errors.add('body', 'data', 'Can\'t update document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return
@@ -87,7 +87,7 @@ class TenderDocumentResource(APIResource):
     def patch(self):
         """Tender Document Update"""
         if self.request.authenticated_role != 'auction' and self.request.validated['tender_status'] != 'active.enquiries' or \
-           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification']:
+           self.request.authenticated_role == 'auction' and self.request.validated['tender_status'] not in ['active.auction', 'active.qualification.decrypt']:
             self.request.errors.add('body', 'data', 'Can\'t update document in current ({}) tender status'.format(self.request.validated['tender_status']))
             self.request.errors.status = 403
             return

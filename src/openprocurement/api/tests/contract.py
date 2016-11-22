@@ -8,7 +8,7 @@ from openprocurement.api.tests.base import BaseTenderWebTest, test_tender_data, 
 
 class TenderContractResourceTest(BaseTenderWebTest):
     #initial_data = tender_data
-    initial_status = 'active.qualification'
+    initial_status = 'active.qualification.decrypt'
     initial_bids = test_bids
 
     def setUp(self):
@@ -338,7 +338,7 @@ class TenderContractResourceTest(BaseTenderWebTest):
 
 
 class Tender2LotContractResourceTest(BaseTenderWebTest):
-    initial_status = 'active.qualification'
+    initial_status = 'active.qualification.decrypt'
     initial_bids = test_bids
     initial_lots = 2 * test_lots
 
@@ -384,7 +384,7 @@ class Tender2LotContractResourceTest(BaseTenderWebTest):
 
 class TenderContractDocumentResourceTest(BaseTenderWebTest):
     #initial_data = tender_data
-    initial_status = 'active.qualification'
+    initial_status = 'active.qualification.decrypt'
     initial_bids = test_bids
 
     def setUp(self):
@@ -677,7 +677,7 @@ class TenderContractDocumentResourceTest(BaseTenderWebTest):
 
 
 class Tender2LotContractDocumentResourceTest(BaseTenderWebTest):
-    initial_status = 'active.qualification'
+    initial_status = 'active.qualification.decrypt'
     initial_bids = test_bids
     initial_lots = 2 * test_lots
 
