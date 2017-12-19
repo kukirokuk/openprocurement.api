@@ -5,6 +5,7 @@ if 'test' not in __import__('sys').argv[0]:
     import gevent.monkey
     gevent.monkey.patch_all()
 import os
+import simplejson
 from libnacl.sign import Signer, Verifier
 from logging import getLogger
 from openprocurement.api.auth import AuthenticationPolicy, authenticated_role, check_accreditation
@@ -21,7 +22,9 @@ from openprocurement.api.utils import (
     beforerender,
     register_tender_procurementMethodType,
     tender_from_data,
-    ROUTE_PREFIX
+    ROUTE_PREFIX,
+    couchdb_json_decode,
+    json_body
 )
 from pkg_resources import iter_entry_points
 from pyramid.authorization import ACLAuthorizationPolicy as AuthorizationPolicy
@@ -48,9 +51,11 @@ def main(global_config, **settings):
     config.add_request_method(authenticated_role, reify=True)
     config.add_request_method(extract_tender, 'tender', reify=True)
     config.add_request_method(check_accreditation)
-    config.add_renderer('prettyjson', JSON(indent=4))
-    config.add_renderer('jsonp', JSONP(param_name='opt_jsonp'))
-    config.add_renderer('prettyjsonp', JSONP(indent=4, param_name='opt_jsonp'))
+    config.add_request_method(json_body, 'json_body', reify=True)
+    config.add_renderer('json', JSON(serializer=simplejson.dumps))
+    config.add_renderer('prettyjson', JSON(serializer=simplejson.dumps, indent=4))
+    config.add_renderer('jsonp', JSONP(serializer=simplejson.dumps, param_name='opt_jsonp'))
+    config.add_renderer('prettyjsonp', JSONP(serializer=simplejson.dumps, indent=4, param_name='opt_jsonp'))
     config.add_subscriber(add_logging_context, NewRequest)
     config.add_subscriber(set_logging_context, ContextFound)
     config.add_subscriber(set_renderer, NewRequest)
@@ -77,6 +82,8 @@ def main(global_config, **settings):
     if aserver:
         config.registry.admin_couchdb_server = aserver
     config.registry.db = db
+    # readjust couchdb json decoder
+    couchdb_json_decode()
 
     # Document Service key
     config.registry.docservice_url = settings.get('docservice_url')
